@@ -3,7 +3,14 @@ services:
     build: .
     ports:
       - 8001:8000
-    command: ["--host", "0.0.0.0"]
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    command: [ "--host", "0.0.0.0" ]
+    depends_on:
+      - prof-db
 
   prof-db:
     image: postgres:16.2

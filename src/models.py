@@ -1,3 +1,4 @@
+from os import environ
 from enum import IntEnum, unique
 from peewee import *
 
@@ -10,7 +11,7 @@ class GameState(IntEnum):
     PLAYING = 4
 
 
-db = PostgresqlDatabase('postgres', user='postgres', password='postgres', host='localhost')
+db = PostgresqlDatabase(environ.get("DB_NAME"), user=environ.get("DB_USER"), password=environ.get("DB_PASS"), host=environ.get("DB_HOST"))
 
 
 class BaseModel(Model):
