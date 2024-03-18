@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    ports:
+      - 8001:8000
+    command: ["--host", "0.0.0.0"]
+
+  prof-db:
+    image: postgres:16.2
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - prof-db-data:/var/lib/postgresql/data
+
+volumes:
+  prof-db-data:
