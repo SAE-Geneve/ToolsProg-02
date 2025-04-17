@@ -109,7 +109,7 @@ async def get_players() -> list[PlayerAPI]:
 @app.get("/p/get/{player_name}")
 async def get_or_create_player(player_name: str) -> PlayerAPI:
     # get_or_create returns a tuple of (item, bool), [-2] to access the item, [-1] to access the bool
-    potential_player = Player.get_or_create(name=player_name)[-2]
+    potential_player, _ = Player.get_or_create(name=player_name)
     return PlayerAPI(id=potential_player.get_id(), name=potential_player.name, elo=potential_player.elo)
 
 @app.post("/g/")
