@@ -14,4 +14,4 @@ RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
 
 COPY src ./src
 
-ENTRYPOINT ["poetry", "run", "fastapi", "run", "src/main.py"]
+CMD ["poetry", "run", "pytest"]

@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from src.main import app
+from main import app
 
 secret_token = "clown"
 client = TestClient(app)
