@@ -67,6 +67,5 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          annotations: ${{ steps.meta.outputs.annotations }}
           provenance: true
           sbom: true
