@@ -2,13 +2,26 @@ services:
   app:
     build: .
     ports:
-      - 8001:8000
+      - 8000:8000
     environment:
       - DB_HOST=prof-db
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-    command: [ "--host", "0.0.0.0" ]
+    depends_on:
+      - prof-db
+
+  test-app:
+    build:
+      context: .
+      dockerfile: test.Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=prof-db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
     depends_on:
       - prof-db
 

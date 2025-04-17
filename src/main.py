@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 
 from peewee import *
-from src.models import db, Player, Game, PlayerGame, GameState
+from models import db, Player, Game, PlayerGame, GameState
 from pydantic import BaseModel
 app = FastAPI()
 
