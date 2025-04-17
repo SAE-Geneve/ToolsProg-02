@@ -24,6 +24,9 @@ class GameAPI(BaseModel):
     id: int
     state: str
 
+class GameSearchAPI(BaseModel):
+    id: int | None = None
+
 state = {GameState.UNPLAYED: "Unplayed", GameState.FINISHED: "Finished", GameState.ABORTED: "Aborted",
          GameState.PLAYING: "Playing"}
 
@@ -88,10 +91,6 @@ async def root():
 
     return {"message": "Hello darkness, my old friend..."}
 
-@app.get("/p/all")
-async def get_players() -> list[PlayerAPI]:
-    return [PlayerAPI(id=player.get_id(), name=player.name, elo=player.elo) for player in Player.select()]
-
 @app.post("/p/")
 async def get_player(player: PlayerSearchAPI) -> PlayerAPI:
     if player.id is None and player.name is None:
@@ -103,22 +102,33 @@ async def get_player(player: PlayerSearchAPI) -> PlayerAPI:
         selected_player = Player.get_by_id(player.id)
         return PlayerAPI(id=selected_player.get_id(), name=selected_player.name, elo=selected_player.elo)
 
+@app.get("/p/all")
+async def get_players() -> list[PlayerAPI]:
+    return [PlayerAPI(id=player.get_id(), name=player.name, elo=player.elo) for player in Player.select()]
+
 @app.get("/p/get/{player_name}")
 async def get_or_create_player(player_name: str) -> PlayerAPI:
     # get_or_create returns a tuple of (item, bool), [-2] to access the item, [-1] to access the bool
     potential_player = Player.get_or_create(name=player_name)[-2]
     return PlayerAPI(id=potential_player.get_id(), name=potential_player.name, elo=potential_player.elo)
 
-@app.get("/g/get/{game_id}")
-async def get_or_create_player(game_id: int) -> GameAPI:
-    # get_or_create returns a tuple of (item, bool), [-2] to access the item, [-1] to access the bool
-    potential_game = Game.get_or_create(id=game_id)[-2]
-    return GameAPI(id=potential_game.id, state=state[potential_game.state])
-
+@app.post("/g/")
+async def get_game(game: GameSearchAPI) -> GameAPI:
+    if game.id is None:
+        raise HTTPException(status_code=404, detail="Game id was not provided")
+    else:
+        selected_game = Game.get_by_id(game.id)
+        return GameAPI(id=selected_game.id, state=state[selected_game.state])
 
 @app.get("/g/all")
 async def get_games() -> list[GameAPI]:
     return [GameAPI(id=game.get_id(), state=state[game.state]) for game in Game.select()]
+
+@app.get("/g/get/{game_id}")
+async def get_or_create_game(game_id: int) -> GameAPI:
+    # get_or_create returns a tuple of (item, bool), [-2] to access the item, [-1] to access the bool
+    potential_game = Game.get_or_create(id=game_id)[-2]
+    return GameAPI(id=potential_game.id, state=state[potential_game.state])
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
@@ -136,3 +146,16 @@ async def get_input_from_game_and_player(game: str, player: str):
 @app.get("/g/{game}/f/{frame}")
 async def get_input_from_game_and_frame(game: str, frame: str):
     pass
+
+client = TestClient(app)
+def test_get_game():
+    response = client.post(
+        "/g/",
+        headers={"X-Token": secret_token},
+        json={"id": "1", "state": GameState.FINISHED.value}
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": 1,
+        "state": state[GameState.FINISHED.value]
+    }
