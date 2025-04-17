@@ -1,9 +1,12 @@
 from fastapi import FastAPI, Request
 from peewee import *
-from src.models import db, Player, Game, PlayerGame, GameState
+from models import db, Player, Game, PlayerGame, GameState
+from os import environ
 
 
 app = FastAPI()
+
+
 
 with db:
     db.create_tables([Player, Game, PlayerGame])
@@ -67,9 +70,30 @@ async def root():
     for player in query:
         print(player.name)
 
-    return {"message": "Hello World"}
+    return {"message": "Hello Antoine"} 
 
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
+
+
+@app.get("/g={game}")
+async def get_input_from_game(game: str):
+    pass
+    
+
+@app.get("/g={game}/p={player}")
+async def get_input_from_game_and_player(game: str, player: str):
+    pass
+
+@app.get("/g={game}/f={frame}")
+async def get_input_from_game_and_frame(game: str, frame: str):
+    pass
+
+@app.get("/p={player}")
+async def get_input_from_game(player: str):
+    pass
+    
+
+   

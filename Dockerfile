@@ -1,6 +1,6 @@
-FROM python:3.12
+FROM python:3.13
 
-RUN pip install poetry==1.8.2
+RUN pip install poetry==2.1.1
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -16,4 +16,4 @@ COPY src ./src
 
 RUN poetry install
 
-ENTRYPOINT ["poetry", "run", "python", "-m", "uvicorn", "src.main:app"]
+ENTRYPOINT ["poetry", "run", "fastapi", "dev"]
