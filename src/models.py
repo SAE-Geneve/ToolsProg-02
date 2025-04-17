@@ -23,7 +23,7 @@ class BaseModel(Model):
 
 
 class Player(BaseModel):
-    name = CharField()
+    name = CharField(unique=True)
     elo = IntegerField(default=0)
 
 
