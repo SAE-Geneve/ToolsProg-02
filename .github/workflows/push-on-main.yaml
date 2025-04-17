@@ -42,15 +42,11 @@ jobs:
         with:
           version: 2.1.1
 
-      - name: Install dependencies globally
-        run: |
-          poetry config virtualenvs.create false
-
       - name: Install dependencies
         run: poetry install --no-root
 
-      - name: Run pytest
-        uses: pavelzw/pytest-action@v2
+      - name: Run tests
+        run: poetry run pytest
 
   build-push-dockerhub:
     runs-on: ubuntu-latest
