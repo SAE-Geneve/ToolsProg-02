@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:17.4
         env:
-          POSTGRES_USER: ${USER}
-          POSTGRES_NAME: ${NAME}
-          POSTGRES_PASSWORD: ${PASS}
+          POSTGRES_USER: postgres
+          POSTGRES_NAME: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
