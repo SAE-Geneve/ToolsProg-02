@@ -2,9 +2,10 @@ name: Test and build API
 on: push
 
 env:
-  USER: postgres
-  NAME: postgres
-  PASS: postgres
+  DB_HOST: postgres
+  DB_USER: postgres
+  DB_NAME: postgres
+  DB_PASS: postgres
 
 jobs:
   python-tests:
